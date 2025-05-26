@@ -2,11 +2,14 @@ import { useEffect, useState } from 'react';
 import { getUserProfile, UserProfile } from '../../services/profile/profileService';
 import { schoolService, EscolaDTO } from '../../services/school/schoolService';
 import { userService, UserDTO } from '../../services/user/userService';
+import { userSchoolService, UserSchoolDTO } from '../../services/userSchool/userSchoolService';
 import styles from './Admin.module.css';
 import SchoolListModal from '../../components/SchoolListModal';
 import SchoolForm from '../../components/SchoolForm';
 import UserListModal from '../../components/UserListModal';
 import UserForm from '../../components/UserForm';
+import UserSchoolListModal from '../../components/UserSchoolListModal';
+import UserSchoolForm from '../../components/UserSchoolForm';
 import { message } from 'antd';
 
 export const Admin = () => {
@@ -17,8 +20,11 @@ export const Admin = () => {
   const [isSchoolFormOpen, setIsSchoolFormOpen] = useState(false);
   const [isUserListOpen, setIsUserListOpen] = useState(false);
   const [isUserFormOpen, setIsUserFormOpen] = useState(false);
+  const [isUserSchoolListOpen, setIsUserSchoolListOpen] = useState(false);
+  const [isUserSchoolFormOpen, setIsUserSchoolFormOpen] = useState(false);
   const [selectedSchool, setSelectedSchool] = useState<EscolaDTO | undefined>(undefined);
   const [selectedUser, setSelectedUser] = useState<UserDTO | undefined>(undefined);
+  const [selectedUserSchool, setSelectedUserSchool] = useState<UserSchoolDTO | undefined>(undefined);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -109,6 +115,42 @@ export const Admin = () => {
     setIsUserFormOpen(true);
   };
 
+  const handleAddUserSchool = async (values: Omit<UserSchoolDTO, 'id' | 'dataCriacao' | 'dataAtualizacao'>) => {
+    try {
+      await userSchoolService.create(values);
+      message.success('Vínculo adicionado com sucesso!');
+      setIsUserSchoolFormOpen(false);
+      if (isUserSchoolListOpen) {
+        const event = new Event('userSchoolListRefresh');
+        window.dispatchEvent(event);
+      }
+    } catch (error) {
+      message.error('Erro ao adicionar vínculo');
+    }
+  };
+
+  const handleEditUserSchool = async (values: Omit<UserSchoolDTO, 'id' | 'dataCriacao' | 'dataAtualizacao'>) => {
+    if (!selectedUserSchool) return;
+    
+    try {
+      await userSchoolService.update(selectedUserSchool.id, values);
+      message.success('Vínculo atualizado com sucesso!');
+      setIsUserSchoolFormOpen(false);
+      setSelectedUserSchool(undefined);
+      if (isUserSchoolListOpen) {
+        const event = new Event('userSchoolListRefresh');
+        window.dispatchEvent(event);
+      }
+    } catch (error) {
+      message.error('Erro ao atualizar vínculo');
+    }
+  };
+
+  const handleEditUserSchoolClick = (userSchool: UserSchoolDTO) => {
+    setSelectedUserSchool(userSchool);
+    setIsUserSchoolFormOpen(true);
+  };
+
   if (loading) return <div className={styles.loading}>Carregando...</div>;
   if (error) return <div className={styles.error}>{error}</div>;
   if (!user) return <div className={styles.error}>Usuário não encontrado</div>;
@@ -166,6 +208,27 @@ export const Admin = () => {
         </div>
       </div>
 
+      <div className={styles.adminSection}>
+        <h3>Gerenciamento de Vínculos Usuário-Escola</h3>
+        <div className={styles.actions}>
+          <button 
+            className={styles.actionButton}
+            onClick={() => {
+              setSelectedUserSchool(undefined);
+              setIsUserSchoolFormOpen(true);
+            }}
+          >
+            Criar Vínculo
+          </button>
+          <button 
+            className={styles.actionButton}
+            onClick={() => setIsUserSchoolListOpen(true)}
+          >
+            Listar Vínculos
+          </button>
+        </div>
+      </div>
+
       <SchoolListModal
         isOpen={isSchoolListOpen}
         onClose={() => setIsSchoolListOpen(false)}
@@ -196,6 +259,22 @@ export const Admin = () => {
         }}
         onSubmit={selectedUser ? handleEditUser : handleAddUser}
         initialValues={selectedUser}
+      />
+
+      <UserSchoolListModal
+        isOpen={isUserSchoolListOpen}
+        onClose={() => setIsUserSchoolListOpen(false)}
+        onEdit={handleEditUserSchoolClick}
+      />
+
+      <UserSchoolForm
+        isOpen={isUserSchoolFormOpen}
+        onClose={() => {
+          setIsUserSchoolFormOpen(false);
+          setSelectedUserSchool(undefined);
+        }}
+        onSubmit={selectedUserSchool ? handleEditUserSchool : handleAddUserSchool}
+        initialValues={selectedUserSchool}
       />
     </div>
   );

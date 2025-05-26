@@ -93,9 +93,7 @@ export const Login = () => {
 
         <GoogleButton onClick={() => handleGoogleLogin()} />
 
-        <p className={styles.registerLink}>
-          Não possui uma conta? <a href="/register" className={styles.link}>Crie aqui</a>
-        </p>
+
       </form>
     </div>
   );

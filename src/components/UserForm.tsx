@@ -1,6 +1,6 @@
 import { Form, Input, Modal, Switch, message, Button } from 'antd';
 import { UserDTO, userService } from '../services/user/userService';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface UserFormProps {
   isOpen: boolean;
@@ -14,6 +14,24 @@ const UserForm = ({ isOpen, onClose, onSubmit, initialValues }: UserFormProps) =
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [passwordForm] = Form.useForm();
   const isEditing = !!initialValues;
+
+  useEffect(() => {
+    if (isOpen && initialValues) {
+      form.setFieldsValue({
+        nome: initialValues.nome,
+        email: initialValues.email,
+        escolaId: initialValues.escolaId,
+        isAdmin: initialValues.isAdmin
+      });
+    } else {
+      form.resetFields();
+    }
+  }, [isOpen, initialValues, form]);
+
+  const handleClose = () => {
+    form.resetFields();
+    onClose();
+  };
 
   const handleSubmit = async () => {
     try {
@@ -44,7 +62,7 @@ const UserForm = ({ isOpen, onClose, onSubmit, initialValues }: UserFormProps) =
       <Modal
         title={isEditing ? 'Editar Usuário' : 'Criar Usuário'}
         open={isOpen}
-        onCancel={onClose}
+        onCancel={handleClose}
         onOk={handleSubmit}
         okText={isEditing ? 'Salvar' : 'Criar'}
         cancelText="Cancelar"
@@ -52,7 +70,6 @@ const UserForm = ({ isOpen, onClose, onSubmit, initialValues }: UserFormProps) =
         <Form
           form={form}
           layout="vertical"
-          initialValues={initialValues}
         >
           <Form.Item
             name="nome"
