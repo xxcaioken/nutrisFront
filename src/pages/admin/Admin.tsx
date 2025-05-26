@@ -1,11 +1,18 @@
 import { useEffect, useState } from 'react';
 import { getUserProfile, UserProfile } from '../../services/profile/profileService';
+import { schoolService, EscolaDTO } from '../../services/school/schoolService';
 import styles from './Admin.module.css';
+import SchoolListModal from '../../components/SchoolListModal';
+import SchoolForm from '../../components/SchoolForm';
+import { message } from 'antd';
 
 export const Admin = () => {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isSchoolListOpen, setIsSchoolListOpen] = useState(false);
+  const [isSchoolFormOpen, setIsSchoolFormOpen] = useState(false);
+  const [selectedSchool, setSelectedSchool] = useState<EscolaDTO | undefined>(undefined);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,6 +30,42 @@ export const Admin = () => {
 
     fetchData();
   }, []);
+
+  const handleAddSchool = async (values: Omit<EscolaDTO, 'id' | 'dataCriacao'>) => {
+    try {
+      await schoolService.create(values);
+      message.success('Escola adicionada com sucesso!');
+      setIsSchoolFormOpen(false);
+      if (isSchoolListOpen) {
+        const event = new Event('schoolListRefresh');
+        window.dispatchEvent(event);
+      }
+    } catch (error) {
+      message.error('Erro ao adicionar escola');
+    }
+  };
+
+  const handleEditSchool = async (values: Omit<EscolaDTO, 'id' | 'dataCriacao'>) => {
+    if (!selectedSchool) return;
+    
+    try {
+      await schoolService.update(selectedSchool.id, values);
+      message.success('Escola atualizada com sucesso!');
+      setIsSchoolFormOpen(false);
+      setSelectedSchool(undefined);
+      if (isSchoolListOpen) {
+        const event = new Event('schoolListRefresh');
+        window.dispatchEvent(event);
+      }
+    } catch (error) {
+      message.error('Erro ao atualizar escola');
+    }
+  };
+
+  const handleEdit = (school: EscolaDTO) => {
+    setSelectedSchool(school);
+    setIsSchoolFormOpen(true);
+  };
 
   if (loading) return <div className={styles.loading}>Carregando...</div>;
   if (error) return <div className={styles.error}>{error}</div>;
@@ -42,10 +85,19 @@ export const Admin = () => {
       <div className={styles.adminSection}>
         <h3>Gerenciamento de Escolas</h3>
         <div className={styles.actions}>
-          <button className={styles.actionButton}>
+          <button 
+            className={styles.actionButton}
+            onClick={() => {
+              setSelectedSchool(undefined);
+              setIsSchoolFormOpen(true);
+            }}
+          >
             Adicionar Nova Escola
           </button>
-          <button className={styles.actionButton}>
+          <button 
+            className={styles.actionButton}
+            onClick={() => setIsSchoolListOpen(true)}
+          >
             Listar Escolas
           </button>
         </div>
@@ -62,6 +114,22 @@ export const Admin = () => {
           </button>
         </div>
       </div>
+
+      <SchoolListModal
+        isOpen={isSchoolListOpen}
+        onClose={() => setIsSchoolListOpen(false)}
+        onEdit={handleEdit}
+      />
+
+      <SchoolForm
+        isOpen={isSchoolFormOpen}
+        onClose={() => {
+          setIsSchoolFormOpen(false);
+          setSelectedSchool(undefined);
+        }}
+        onSubmit={selectedSchool ? handleEditSchool : handleAddSchool}
+        initialValues={selectedSchool}
+      />
     </div>
   );
 }; 
