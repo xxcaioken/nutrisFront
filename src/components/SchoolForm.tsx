@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, Button, Modal, message } from 'antd';
+import { Form, Input, Modal, message } from 'antd';
 import { EscolaDTO } from '../services/school/schoolService';
 
 interface SchoolFormProps {
