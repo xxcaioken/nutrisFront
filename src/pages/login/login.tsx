@@ -4,6 +4,7 @@ import { useAuth } from '../../context/auth/login';
 import { login as loginService } from '../../services/auth/AuthService';
 import { Input } from '../../components/common/Input';
 import { Button } from '../../components/common/Button';
+import styles from './login.module.css';
 
 export const Login = () => {
   const [email, setEmail] = useState('');
@@ -23,9 +24,9 @@ export const Login = () => {
   };
 
   return (
-    <div style={styles.container}>
-      <form onSubmit={handleSubmit} style={styles.form}>
-        <h2 style={{ marginBottom: '1rem' }}>Login</h2>
+    <div className={styles.container}>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <h2 className={styles.title}>Login</h2>
 
         <Input
           label="Email"
@@ -45,37 +46,10 @@ export const Login = () => {
 
         <Button label="Entrar" type="submit" />
 
-        <p style={styles.registerLink}>
-          Não possui uma conta? <a href="/register" style={styles.link}>Crie aqui</a>
+        <p className={styles.registerLink}>
+          Não possui uma conta? <a href="/register" className={styles.link}>Crie aqui</a>
         </p>
       </form>
     </div>
   );
-};
-
-const styles: { [key: string]: React.CSSProperties } = {
-  container: {
-    minHeight: '100vh',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f6f6f6',
-  },
-  form: {
-    width: '100%',
-    maxWidth: '400px',
-    padding: '2rem',
-    backgroundColor: '#fff',
-    borderRadius: '8px',
-    boxShadow: '0 0 10px rgba(0,0,0,0.1)',
-  },
-  registerLink: {
-    marginTop: '1rem',
-    textAlign: 'center',
-    fontSize: '0.9rem',
-  },
-  link: {
-    color: '#007bff',
-    textDecoration: 'none',
-  },
 };

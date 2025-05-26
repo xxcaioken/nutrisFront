@@ -1,29 +1,33 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { register as registerService } from '../../services/register/register';
+import { useAuth } from '../../context/auth/login';
 import { Input } from '../../components/common/Input';
 import { Button } from '../../components/common/Button';
+import styles from './register.module.css';
+import { register } from '../../services/register/register';
 
 export const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [nome, setNome] = useState('');
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await registerService({ email, password, nome });
-      navigate('/login');
+      const result = await register({ email, password, nome });
+      login(result.token);
+      navigate('/profile');
     } catch (err) {
-      alert(err);
+      alert('Erro ao criar conta. Verifique os dados informados.');
     }
   };
 
   return (
-    <div style={styles.container}>
-      <form onSubmit={handleSubmit} style={styles.form}>
-        <h2 style={{ marginBottom: '1rem' }}>Criar Conta</h2>
+    <div className={styles.container}>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <h2 className={styles.title}>Criar Conta</h2>
 
         <Input
           label="Nome"
@@ -51,37 +55,10 @@ export const Register = () => {
 
         <Button label="Registrar" type="submit" />
 
-        <p style={styles.loginLink}>
-          Já possui uma conta? <a href="/" style={styles.link}>Faça login aqui</a>
+        <p className={styles.loginLink}>
+          Já possui uma conta? <a href="/" className={styles.link}>Faça login aqui</a>
         </p>
       </form>
     </div>
   );
-};
-
-const styles: { [key: string]: React.CSSProperties } = {
-  container: {
-    minHeight: '100vh',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f6f6f6',
-  },
-  form: {
-    width: '100%',
-    maxWidth: '400px',
-    padding: '2rem',
-    backgroundColor: '#fff',
-    borderRadius: '8px',
-    boxShadow: '0 0 10px rgba(0,0,0,0.1)',
-  },
-  loginLink: {
-    marginTop: '1rem',
-    textAlign: 'center',
-    fontSize: '0.9rem',
-  },
-  link: {
-    color: '#007bff',
-    textDecoration: 'none',
-  },
 };
