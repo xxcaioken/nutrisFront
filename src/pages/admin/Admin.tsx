@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
 import { getUserProfile, UserProfile } from '../../services/profile/profileService';
 import { schoolService, EscolaDTO } from '../../services/school/schoolService';
+import { userService, UserDTO } from '../../services/user/userService';
 import styles from './Admin.module.css';
 import SchoolListModal from '../../components/SchoolListModal';
 import SchoolForm from '../../components/SchoolForm';
+import UserListModal from '../../components/UserListModal';
+import UserForm from '../../components/UserForm';
 import { message } from 'antd';
 
 export const Admin = () => {
@@ -12,7 +15,10 @@ export const Admin = () => {
   const [error, setError] = useState<string | null>(null);
   const [isSchoolListOpen, setIsSchoolListOpen] = useState(false);
   const [isSchoolFormOpen, setIsSchoolFormOpen] = useState(false);
+  const [isUserListOpen, setIsUserListOpen] = useState(false);
+  const [isUserFormOpen, setIsUserFormOpen] = useState(false);
   const [selectedSchool, setSelectedSchool] = useState<EscolaDTO | undefined>(undefined);
+  const [selectedUser, setSelectedUser] = useState<UserDTO | undefined>(undefined);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,6 +73,42 @@ export const Admin = () => {
     setIsSchoolFormOpen(true);
   };
 
+  const handleAddUser = async (values: Omit<UserDTO, 'id'>) => {
+    try {
+      await userService.create(values);
+      message.success('Usuário adicionado com sucesso!');
+      setIsUserFormOpen(false);
+      if (isUserListOpen) {
+        const event = new Event('userListRefresh');
+        window.dispatchEvent(event);
+      }
+    } catch (error) {
+      message.error('Erro ao adicionar usuário');
+    }
+  };
+
+  const handleEditUser = async (values: Omit<UserDTO, 'id'>) => {
+    if (!selectedUser) return;
+    
+    try {
+      await userService.update(selectedUser.id, values);
+      message.success('Usuário atualizado com sucesso!');
+      setIsUserFormOpen(false);
+      setSelectedUser(undefined);
+      if (isUserListOpen) {
+        const event = new Event('userListRefresh');
+        window.dispatchEvent(event);
+      }
+    } catch (error) {
+      message.error('Erro ao atualizar usuário');
+    }
+  };
+
+  const handleEditUserClick = (user: UserDTO) => {
+    setSelectedUser(user);
+    setIsUserFormOpen(true);
+  };
+
   if (loading) return <div className={styles.loading}>Carregando...</div>;
   if (error) return <div className={styles.error}>{error}</div>;
   if (!user) return <div className={styles.error}>Usuário não encontrado</div>;
@@ -106,11 +148,20 @@ export const Admin = () => {
       <div className={styles.adminSection}>
         <h3>Gerenciamento de Usuários</h3>
         <div className={styles.actions}>
-          <button className={styles.actionButton}>
-            Listar Usuários
+          <button 
+            className={styles.actionButton}
+            onClick={() => {
+              setSelectedUser(undefined);
+              setIsUserFormOpen(true);
+            }}
+          >
+            Criar Usuário
           </button>
-          <button className={styles.actionButton}>
-            Gerenciar Permissões
+          <button 
+            className={styles.actionButton}
+            onClick={() => setIsUserListOpen(true)}
+          >
+            Listar Usuários
           </button>
         </div>
       </div>
@@ -129,6 +180,22 @@ export const Admin = () => {
         }}
         onSubmit={selectedSchool ? handleEditSchool : handleAddSchool}
         initialValues={selectedSchool}
+      />
+
+      <UserListModal
+        isOpen={isUserListOpen}
+        onClose={() => setIsUserListOpen(false)}
+        onEdit={handleEditUserClick}
+      />
+
+      <UserForm
+        isOpen={isUserFormOpen}
+        onClose={() => {
+          setIsUserFormOpen(false);
+          setSelectedUser(undefined);
+        }}
+        onSubmit={selectedUser ? handleEditUser : handleAddUser}
+        initialValues={selectedUser}
       />
     </div>
   );
