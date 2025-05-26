@@ -11,3 +11,13 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+/* index.css */
+@media (min-width: 768px) {
+  .form-row {
+    display: flex;
+    gap: 1rem;
+  }
+  .form-row > div {
+    flex: 1;
+  }
+}
