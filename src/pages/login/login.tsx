@@ -13,13 +13,23 @@ export const Login = () => {
   const [password, setPassword] = useState('');
   const { login } = useAuth();
   const navigate = useNavigate();
-
+  
+  const redirect = (isAdmin:boolean)=>{
+    console.log(isAdmin)
+    if(isAdmin){
+      navigate('/adm');
+    } else{
+      navigate('/profile');
+    }
+  }
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const result = await loginService({ email, password });
       login(result.token);
-      navigate('/profile');
+      console.log(result)
+      redirect(!!result.user.isAdmin);
     } catch (err) {
       alert('Erro ao fazer login. Verifique suas credenciais. :' + err);
     }
@@ -42,7 +52,7 @@ export const Login = () => {
           password:"123GOOGLEPASSWORD**"
         });
         login(result.token);
-        navigate('/profile');
+        redirect(!!result.user.isAdmin);
       } catch (err) {
         alert('Erro ao fazer login com Google.' + err);
       }

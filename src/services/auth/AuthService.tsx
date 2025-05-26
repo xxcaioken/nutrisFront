@@ -1,4 +1,5 @@
 import { axiosInstance } from '../api/axiosInstance';
+import { UserProfile } from '../profile/profileService';
 
 const AUTH_URL = '/auth';
 
@@ -11,6 +12,7 @@ interface LoginRequest {
 
 interface AuthResponse {
   token: string;
+  user: UserProfile;
 }
 
 export const login = async (data: LoginRequest): Promise<AuthResponse> => {
