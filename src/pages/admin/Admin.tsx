@@ -10,7 +10,8 @@ import UserListModal from '../../components/UserListModal';
 import UserForm from '../../components/UserForm';
 import UserSchoolListModal from '../../components/UserSchoolListModal';
 import UserSchoolForm from '../../components/UserSchoolForm';
-import { message } from 'antd';
+import { message, Modal } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 
 export const Admin = () => {
   const [user, setUser] = useState<UserProfile | null>(null);
@@ -22,6 +23,7 @@ export const Admin = () => {
   const [isUserFormOpen, setIsUserFormOpen] = useState(false);
   const [isUserSchoolListOpen, setIsUserSchoolListOpen] = useState(false);
   const [isUserSchoolFormOpen, setIsUserSchoolFormOpen] = useState(false);
+  const [isInstructionsModalOpen, setIsInstructionsModalOpen] = useState(false);
   const [selectedSchool, setSelectedSchool] = useState<EscolaDTO | undefined>(undefined);
   const [selectedUser, setSelectedUser] = useState<UserDTO | undefined>(undefined);
   const [selectedUserSchool, setSelectedUserSchool] = useState<UserSchoolDTO | undefined>(undefined);
@@ -228,6 +230,45 @@ export const Admin = () => {
           </button>
         </div>
       </div>
+
+      <div className={styles.adminSection}>
+        <h3>
+          Clonar planilha
+          <QuestionCircleOutlined 
+            className={styles.helpIcon}
+            onClick={() => setIsInstructionsModalOpen(true)}
+          />
+        </h3>
+        <div className={styles.actions}>
+          <a 
+            href="https://docs.google.com/spreadsheets/d/1fMrqWIIlbs5QO7icdFqGmoM3LxPtUffa14jHUS6cOJ4/edit?gid=0#gid=0"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.actionButton}
+          >
+            clonar Planilha
+          </a>
+        </div>
+      </div>
+
+      <Modal
+        title="Como clonar a planilha"
+        open={isInstructionsModalOpen}
+        onCancel={() => setIsInstructionsModalOpen(false)}
+        footer={null}
+      >
+        <div className={styles.instructions}>
+          <h4>Instruções para clonar a planilha:</h4>
+          <ol>
+            <li>Clique no botão "clonar Planilha"</li>
+            <li>Na página do Google Sheets que abrir, clique em "Arquivo" no menu superior</li>
+            <li>Selecione "Fazer uma cópia"</li>
+            <li>Escolha um nome para sua cópia e selecione onde deseja salvá-la</li>
+            <li>Clique em "OK" para criar sua cópia</li>
+          </ol>
+          <p><strong>Observação:</strong> Você precisa estar logado em uma conta Google para fazer a cópia da planilha.</p>
+        </div>
+      </Modal>
 
       <SchoolListModal
         isOpen={isSchoolListOpen}

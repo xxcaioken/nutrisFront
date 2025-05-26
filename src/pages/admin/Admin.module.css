@@ -79,4 +79,31 @@
   border-radius: 8px;
   margin: 2rem auto;
   max-width: 600px;
+}
+
+.helpIcon {
+  margin-left: 8px;
+  cursor: pointer;
+  color: #1890ff;
+  font-size: 16px;
+}
+
+.helpIcon:hover {
+  color: #40a9ff;
+}
+
+.instructions {
+  padding: 16px;
+}
+
+.instructions h4 {
+  margin-bottom: 16px;
+}
+
+.instructions ol {
+  margin-bottom: 16px;
+}
+
+.instructions li {
+  margin-bottom: 8px;
 } 
