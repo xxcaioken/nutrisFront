@@ -10,13 +10,11 @@ const AdminPage: React.FC = () => {
   const [selectedSchool, setSelectedSchool] = useState<any>(null);
 
   const handleAddSchool = (values: any) => {
-    console.log('Adicionar escola:', values);
     message.success('Escola adicionada com sucesso!');
     setIsSchoolFormOpen(false);
   };
 
   const handleEditSchool = (values: any) => {
-    console.log('Editar escola:', values);
     message.success('Escola atualizada com sucesso!');
     setIsSchoolFormOpen(false);
   };

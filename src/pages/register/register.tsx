@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/auth/login';
 import { Input } from '../../components/common/Input';
 import { Button } from '../../components/common/Button';
+import { message } from 'antd';
 import styles from './register.module.css';
 import { register } from '../../services/register/register';
 
@@ -20,7 +21,7 @@ export const Register = () => {
       login(result.token);
       navigate('/profile');
     } catch (err) {
-      alert('Erro ao criar conta. Verifique os dados informados.' + err);
+      message.error('Erro ao criar conta. Verifique os dados informados.');
     }
   };
 

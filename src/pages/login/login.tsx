@@ -7,6 +7,7 @@ import { Input } from '../../components/common/Input';
 import { Button } from '../../components/common/Button';
 import { GoogleButton } from '../../components/common/GoogleButton';
 import styles from './login.module.css';
+import { message } from 'antd';
 
 export const Login = () => {
   const [email, setEmail] = useState('');
@@ -15,7 +16,6 @@ export const Login = () => {
   const navigate = useNavigate();
   
   const redirect = (isAdmin:boolean)=>{
-    console.log(isAdmin)
     if(isAdmin){
       navigate('/adm');
     } else{
@@ -28,23 +28,19 @@ export const Login = () => {
     try {
       const result = await loginService({ email, password });
       login(result.token);
-      console.log(result)
       redirect(!!result.user.isAdmin);
     } catch (err) {
-      alert('Erro ao fazer login. Verifique suas credenciais. :' + err);
+      message.error('Erro ao fazer login. Verifique suas credenciais. :' + err);
     }
   };
 
   const handleGoogleLogin = useGoogleLogin({
     onSuccess: async (response) => {
       try {
-        console.log('Token do Google recebido:', response);
         
         const userInfo = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
           headers: { Authorization: `Bearer ${response.access_token}` }
         }).then(res => res.json());
-
-        console.log('Informações do usuário Google:', userInfo);
 
         const result = await loginByGoogle({ 
           googleToken: response.access_token,
@@ -54,11 +50,11 @@ export const Login = () => {
         login(result.token);
         redirect(!!result.user.isAdmin);
       } catch (err) {
-        alert('Erro ao fazer login com Google.' + err);
+        message.error('Erro ao fazer login com Google.' + err);
       }
     },
     onError: (error) => {
-      alert('Erro ao fazer login com Google.' + error);
+      message.error('Erro ao fazer login com Google.' + error);
     },
     flow: 'implicit',
     scope: 'email profile',

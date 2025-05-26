@@ -33,7 +33,7 @@ export const Admin = () => {
         const profile = await getUserProfile();
         setUser(profile);
       } catch (error) {
-        console.error('Erro ao carregar dados:', error);
+        message.error('Erro ao carregar dados:' + error);
         setError('Erro ao carregar dados do perfil');
       } finally {
         setLoading(false);

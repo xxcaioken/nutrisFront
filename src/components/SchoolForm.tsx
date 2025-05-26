@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, Button, Modal } from 'antd';
+import { Form, Input, Button, Modal, message } from 'antd';
 import { EscolaDTO } from '../services/school/schoolService';
 
 interface SchoolFormProps {
@@ -23,7 +23,7 @@ const SchoolForm: React.FC<SchoolFormProps> = ({
       onSubmit(values);
       form.resetFields();
     } catch (error) {
-      console.error('Erro ao validar formulário:', error);
+      message.error('Erro ao validar formulário:' + error);
     }
   };
 

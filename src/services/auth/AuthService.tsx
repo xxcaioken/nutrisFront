@@ -17,7 +17,6 @@ interface AuthResponse {
 
 export const login = async (data: LoginRequest): Promise<AuthResponse> => {
   try {
-    console.log('Dados sendo enviados para login:', data);
     const response = await axiosInstance.post(`${AUTH_URL}/login`, data);
     return response.data;
   } catch (error: any) {
@@ -32,7 +31,6 @@ export const login = async (data: LoginRequest): Promise<AuthResponse> => {
 
 export const loginByGoogle = async  (data: LoginRequest): Promise<AuthResponse> => {
   try {
-    console.log('Dados sendo enviados para login:', data);
     const response = await axiosInstance.post(`${AUTH_URL}/google`, data);
     return response.data;
   } catch (error: any) {
