@@ -17,13 +17,14 @@ export const Profile = () => {
     fetchData();
   }, []);
 
-  if (!user) return <p>Carregando...</p>;
+  if (!!user?.isAdmin) 
+    return <p>Carregando...</p>;
 
   return (
     <div>
       <h2>Perfil</h2>
-      <p><strong>Nome:</strong> {user.nome}</p>
-      <p><strong>Email:</strong> {user.email}</p>
+      <p><strong>Nome:</strong> {user?.nome}</p>
+      <p><strong>Email:</strong> {user?.email}</p>
     </div>
   );
 };

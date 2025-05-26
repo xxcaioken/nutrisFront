@@ -20,7 +20,7 @@ export const Register = () => {
       login(result.token);
       navigate('/profile');
     } catch (err) {
-      alert('Erro ao criar conta. Verifique os dados informados.');
+      alert('Erro ao criar conta. Verifique os dados informados.' + err);
     }
   };
 

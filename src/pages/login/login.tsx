@@ -21,7 +21,7 @@ export const Login = () => {
       login(result.token);
       navigate('/profile');
     } catch (err) {
-      alert('Erro ao fazer login. Verifique suas credenciais.');
+      alert('Erro ao fazer login. Verifique suas credenciais. :' + err);
     }
   };
 
@@ -44,13 +44,11 @@ export const Login = () => {
         login(result.token);
         navigate('/profile');
       } catch (err) {
-        console.error('Erro no login com Google:', err);
-        alert('Erro ao fazer login com Google.');
+        alert('Erro ao fazer login com Google.' + err);
       }
     },
     onError: (error) => {
-      console.error('Erro no login com Google:', error);
-      alert('Erro ao fazer login com Google.');
+      alert('Erro ao fazer login com Google.' + error);
     },
     flow: 'implicit',
     scope: 'email profile',

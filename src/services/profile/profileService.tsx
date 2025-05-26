@@ -4,6 +4,7 @@ export interface UserProfile {
   id: string;
   email: string;
   nome: string;
+  isAdmin?:boolean;
 }
 
 export const getUserProfile = async (): Promise<UserProfile> => {

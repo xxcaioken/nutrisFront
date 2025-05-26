@@ -4,6 +4,7 @@ interface RegisterRequest {
   email: string;
   password: string;
   nome: string;
+  isAdmin?:boolean;
 }
 
 interface AuthResponse {
