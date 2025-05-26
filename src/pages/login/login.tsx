@@ -44,6 +44,10 @@ export const Login = () => {
         />
 
         <Button label="Entrar" type="submit" />
+
+        <p style={styles.registerLink}>
+          Não possui uma conta? <a href="/register" style={styles.link}>Crie aqui</a>
+        </p>
       </form>
     </div>
   );
@@ -64,5 +68,14 @@ const styles: { [key: string]: React.CSSProperties } = {
     backgroundColor: '#fff',
     borderRadius: '8px',
     boxShadow: '0 0 10px rgba(0,0,0,0.1)',
+  },
+  registerLink: {
+    marginTop: '1rem',
+    textAlign: 'center',
+    fontSize: '0.9rem',
+  },
+  link: {
+    color: '#007bff',
+    textDecoration: 'none',
   },
 };
