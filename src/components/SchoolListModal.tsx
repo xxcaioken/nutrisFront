@@ -86,6 +86,18 @@ const SchoolListModal: React.FC<SchoolListModalProps> = ({ isOpen, onClose, onEd
     }
   }, [isOpen]);
 
+  useEffect(() => {
+    const handleRefresh = () => {
+      loadSchools();
+    };
+
+    window.addEventListener('schoolListRefresh', handleRefresh);
+
+    return () => {
+      window.removeEventListener('schoolListRefresh', handleRefresh);
+    };
+  }, []);
+
   return (
     <Modal
       title="Gerenciamento de Escolas"
