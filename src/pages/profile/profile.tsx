@@ -18,7 +18,6 @@ export const Profile = () => {
         const profile = await getUserProfile();
         setUser(profile);
         
-        // Buscar as escolas do usuário
         const userSchools = await getUserSchools(profile.id);
         setSchools(userSchools);
       } catch (error) {
@@ -64,7 +63,7 @@ export const Profile = () => {
       </div>
 
       <div className={styles.schoolsSection}>
-        <h3>Escolas</h3>
+        <h3>Rotas</h3>
         {schools.length === 0 ? (
           <p>Nenhuma escola encontrada</p>
         ) : (
@@ -79,7 +78,7 @@ export const Profile = () => {
                 </div>
                 <div className={styles.schoolDetails}>
                   <p>
-                    <strong>Link da Planilha:</strong>{' '}
+                    <strong>Link das Planilhas:</strong>{' '}
                     <button 
                       className={styles.spreadsheetLink}
                       onClick={() => handleSpreadsheetClick(school.linkPlanilha)}

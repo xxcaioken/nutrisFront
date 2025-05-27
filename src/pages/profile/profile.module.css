@@ -1,28 +1,58 @@
 .container {
-  max-width: 800px;
-  margin: 2rem auto;
+  min-height: 100vh;
+  background: white;
   padding: 2rem;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .title {
-  color: #333;
+  color: #1a73e8;
+  font-size: 2.5rem;
+  font-weight: 700;
   margin-bottom: 2rem;
   text-align: center;
+  position: relative;
+}
+
+.title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 3px;
+  background: linear-gradient(90deg, #1a73e8, #34a853);
+  border-radius: 3px;
 }
 
 .profileInfo {
+  background: rgba(255, 255, 255, 0.95);
   margin-bottom: 2rem;
-  padding: 1rem;
-  background-color: #f8f9fa;
-  border-radius: 4px;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(26, 115, 232, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profileInfo:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
 }
 
 .profileInfo p {
-  margin: 0.5rem 0;
-  color: #555;
+  margin: 0.8rem 0;
+  color: #333;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.profileInfo strong {
+  color: #1a73e8;
+  min-width: 80px;
+  font-weight: 600;
 }
 
 .schoolsSection {
@@ -30,22 +60,45 @@
 }
 
 .schoolsSection h3 {
-  color: #333;
-  margin-bottom: 1rem;
+  color: #1a73e8;
+  margin-bottom: 1.5rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.schoolsSection h3::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 24px;
+  background: linear-gradient(to bottom, #1a73e8, #34a853);
+  border-radius: 2px;
 }
 
 .schoolsList {
   list-style: none;
   padding: 0;
   margin: 0;
+  display: grid;
+  gap: 1rem;
 }
 
 .schoolItem {
   padding: 1.5rem;
-  margin-bottom: 1rem;
-  background-color: #f8f9fa;
-  border-radius: 4px;
-  border-left: 4px solid #007bff;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(26, 115, 232, 0.1);
+  transition: all 0.3s ease;
+}
+
+.schoolItem:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  border-color: rgba(26, 115, 232, 0.2);
 }
 
 .schoolHeader {
@@ -53,50 +106,126 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(26, 115, 232, 0.1);
 }
 
 .schoolHeader h4 {
   margin: 0;
-  color: #333;
-  font-size: 1.1rem;
+  color: #1a73e8;
+  font-size: 1.2rem;
+  font-weight: 600;
 }
 
 .schoolDate {
   color: #666;
   font-size: 0.9rem;
+  background: rgba(26, 115, 232, 0.1);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
 }
 
 .schoolDetails {
-  color: #555;
+  color: #333;
 }
 
 .schoolDetails p {
-  margin: 0.5rem 0;
+  margin: 0.8rem 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.schoolDetails strong {
+  color: #1a73e8;
+  min-width: 120px;
+  font-weight: 600;
 }
 
 .spreadsheetLink {
   background: none;
   border: none;
-  color: #007bff;
+  color: #1a73e8;
   cursor: pointer;
-  padding: 0;
-  font-size: inherit;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
   text-align: left;
   word-break: break-all;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  background: rgba(26, 115, 232, 0.1);
 }
 
 .spreadsheetLink:hover {
-  text-decoration: underline;
+  background: rgba(26, 115, 232, 0.2);
+  transform: translateY(-1px);
 }
 
 .loading {
   text-align: center;
   padding: 2rem;
-  color: #666;
+  color: #1a73e8;
+  font-size: 1.2rem;
+  background: rgba(26, 115, 232, 0.1);
+  border-radius: 16px;
+  margin: 2rem auto;
+  max-width: 600px;
 }
 
 .error {
   text-align: center;
   padding: 2rem;
-  color: #dc3545;
+  color: white;
+  font-size: 1.2rem;
+  background: rgba(220, 53, 69, 0.2);
+  border-radius: 16px;
+  margin: 2rem auto;
+  max-width: 600px;
+  border: 1px solid rgba(220, 53, 69, 0.3);
+}
+
+/* Animações */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.profileInfo {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.schoolsList {
+  animation: fadeIn 0.5s ease-out;
+  animation-delay: 0.1s;
+  animation-fill-mode: both;
+}
+
+/* Estilização do Modal */
+:global(.ant-modal-content) {
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+:global(.ant-modal-header) {
+  background: linear-gradient(90deg, #1a73e8, #34a853);
+  padding: 1rem 1.5rem;
+}
+
+:global(.ant-modal-title) {
+  color: white !important;
+  font-weight: 600;
+}
+
+:global(.ant-modal-close) {
+  color: white !important;
+}
+
+:global(.ant-modal-body) {
+  padding: 1.5rem;
 } 
