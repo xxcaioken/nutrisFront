@@ -8,6 +8,7 @@ import { Button } from '../../components/common/Button';
 import { GoogleButton } from '../../components/common/GoogleButton';
 import styles from './login.module.css';
 import { message } from 'antd';
+import { HeartOutlined } from '@ant-design/icons';
 
 export const Login = () => {
   const [email, setEmail] = useState('');
@@ -37,7 +38,6 @@ export const Login = () => {
   const handleGoogleLogin = useGoogleLogin({
     onSuccess: async (response) => {
       try {
-        
         const userInfo = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
           headers: { Authorization: `Bearer ${response.access_token}` }
         }).then(res => res.json());
@@ -63,7 +63,13 @@ export const Login = () => {
   return (
     <div className={styles.container}>
       <form onSubmit={handleSubmit} className={styles.form}>
-        <h2 className={styles.title}>Login</h2>
+        <div className={styles.logoContainer}>
+          <HeartOutlined className={styles.logo} />
+          <h1 className={styles.appName}>NutriS</h1>
+        </div>
+        
+        <h2 className={styles.title}>Bem-vindo(a)</h2>
+        <p className={styles.subtitle}>Faça login para acessar sua conta</p>
 
         <Input
           label="Email"
@@ -88,8 +94,6 @@ export const Login = () => {
         </div>
 
         <GoogleButton onClick={() => handleGoogleLogin()} />
-
-
       </form>
     </div>
   );

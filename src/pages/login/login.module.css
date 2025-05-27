@@ -1,22 +1,52 @@
 .container {
   min-height: 100vh;
   display: flex;
-  justify-content: center;
   align-items: center;
-  background-color: #f6f6f6;
+  justify-content: center;
+  background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
+  padding: 20px;
 }
 
 .form {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 400px;
-  padding: 2rem;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  max-width: 420px;
+  position: relative;
+  overflow: hidden;
+}
+
+.form::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #1a73e8, #34a853);
 }
 
 .title {
-  margin-bottom: 1rem;
+  color: #1a73e8;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  text-align: center;
+  position: relative;
+}
+
+.title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #1a73e8, #34a853);
+  border-radius: 3px;
 }
 
 .registerLink {
@@ -34,18 +64,133 @@
   display: flex;
   align-items: center;
   text-align: center;
-  margin: 1rem 0;
+  margin: 1.5rem 0;
+  color: #666;
 }
 
 .divider::before,
 .divider::after {
   content: '';
   flex: 1;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .divider span {
   padding: 0 1rem;
-  color: #666;
   font-size: 0.9rem;
+  color: #666;
+}
+
+:global(.ant-input) {
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  padding: 12px;
+  transition: all 0.3s ease;
+}
+
+:global(.ant-input:hover) {
+  border-color: #1a73e8;
+}
+
+:global(.ant-input:focus) {
+  border-color: #1a73e8;
+  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+}
+
+:global(.ant-form-item-label > label) {
+  color: #333;
+  font-weight: 500;
+}
+
+:global(.ant-btn-primary) {
+  background: #1a73e8;
+  border: none;
+  border-radius: 8px;
+  height: 44px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+:global(.ant-btn-primary:hover) {
+  background: #1557b0;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(26, 115, 232, 0.2);
+}
+
+:global(.google-button) {
+  width: 100%;
+  height: 44px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+:global(.google-button:hover) {
+  background: #f8f9fa;
+  border-color: #1a73e8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  gap: 12px;
+}
+
+.logo {
+  font-size: 2.5rem;
+  color: #1a73e8;
+  animation: pulse 2s infinite;
+}
+
+.appName {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1a73e8;
+  margin: 0;
+  background: linear-gradient(90deg, #1a73e8, #34a853);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+  text-align: center;
+  color: #666;
+  margin-bottom: 2rem;
+  font-size: 1rem;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
 } 
