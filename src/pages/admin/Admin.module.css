@@ -57,10 +57,17 @@
   cursor: pointer;
   font-size: 1rem;
   transition: background-color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
 }
 
 .actionButton:hover {
   background-color: #0056b3;
+  text-decoration: none;
+  color: white;
 }
 
 .loading {
@@ -82,14 +89,14 @@
 }
 
 .helpIcon {
-  margin-left: 8px;
   cursor: pointer;
-  color: #1890ff;
   font-size: 16px;
+  color: white;
+  transition: opacity 0.2s;
 }
 
 .helpIcon:hover {
-  color: #40a9ff;
+  opacity: 0.8;
 }
 
 .instructions {

@@ -24,6 +24,7 @@ export const Admin = () => {
   const [isUserSchoolListOpen, setIsUserSchoolListOpen] = useState(false);
   const [isUserSchoolFormOpen, setIsUserSchoolFormOpen] = useState(false);
   const [isInstructionsModalOpen, setIsInstructionsModalOpen] = useState(false);
+  const [isSpreadsheetModalOpen, setIsSpreadsheetModalOpen] = useState(false);
   const [selectedSchool, setSelectedSchool] = useState<EscolaDTO | undefined>(undefined);
   const [selectedUser, setSelectedUser] = useState<UserDTO | undefined>(undefined);
   const [selectedUserSchool, setSelectedUserSchool] = useState<UserSchoolDTO | undefined>(undefined);
@@ -211,7 +212,7 @@ export const Admin = () => {
       </div>
 
       <div className={styles.adminSection}>
-        <h3>Gerenciamento de Vínculos Usuário-Escola</h3>
+        <h3>Gerenciamento de Vínculos Usuário Escolas</h3>
         <div className={styles.actions}>
           <button 
             className={styles.actionButton}
@@ -233,23 +234,52 @@ export const Admin = () => {
 
       <div className={styles.adminSection}>
         <h3>
-          Clonar planilha
-          <QuestionCircleOutlined 
-            className={styles.helpIcon}
-            onClick={() => setIsInstructionsModalOpen(true)}
-          />
+          Planilha base
         </h3>
         <div className={styles.actions}>
+          
           <a 
             href="https://docs.google.com/spreadsheets/d/1fMrqWIIlbs5QO7icdFqGmoM3LxPtUffa14jHUS6cOJ4/edit?gid=0#gid=0"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.actionButton}
           >
-            clonar Planilha
+            Clonar Planilha
+            <QuestionCircleOutlined 
+              className={styles.helpIcon}
+              onClick={(e) => {
+                e.preventDefault();
+                setIsInstructionsModalOpen(true);
+              }}
+            />
           </a>
+          <button 
+            className={styles.actionButton}
+            onClick={() => setIsSpreadsheetModalOpen(true)}
+          >
+            Editar Planilha Base
+          </button>
         </div>
       </div>
+
+      <Modal
+        title="Planilha Base"
+        open={isSpreadsheetModalOpen}
+        onCancel={() => setIsSpreadsheetModalOpen(false)}
+        width="90%"
+        style={{ top: 20 }}
+        bodyStyle={{ height: 'calc(90vh - 110px)', padding: 0 }}
+      >
+        <iframe
+          src="https://docs.google.com/spreadsheets/d/1fMrqWIIlbs5QO7icdFqGmoM3LxPtUffa14jHUS6cOJ4/edit?gid=0#gid=0"
+          style={{
+            width: '100%',
+            height: '100%',
+            border: 'none'
+          }}
+          title="Planilha Base"
+        />
+      </Modal>
 
       <Modal
         title="Como clonar a planilha"

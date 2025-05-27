@@ -18,9 +18,9 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+            <Route path="/register" element={<PrivateRoute><Register /></PrivateRoute>} />
             <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
-            <Route path="/spreadsheet" element={<Spreadsheet />} />
+            <Route path="/spreadsheet" element={<PrivateRoute><Spreadsheet /></PrivateRoute>} />
             <Route path="/adm" element={<PrivateRoute><Admin /></PrivateRoute>} />
           </Routes>
         </Router>

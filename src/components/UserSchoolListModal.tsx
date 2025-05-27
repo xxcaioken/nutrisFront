@@ -104,7 +104,7 @@ const UserSchoolListModal = ({ isOpen, onClose, onEdit }: UserSchoolListModalPro
 
   return (
     <Modal
-      title="Lista de Vínculos Usuário-Escola"
+      title="Lista de Vínculos Usuário Escolas"
       open={isOpen}
       onCancel={onClose}
       width={1000}
