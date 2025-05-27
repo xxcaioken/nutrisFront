@@ -3,6 +3,7 @@ import { getUserProfile, UserProfile } from '../../services/profile/profileServi
 import { schoolService, EscolaDTO } from '../../services/school/schoolService';
 import { userService, UserDTO } from '../../services/user/userService';
 import { userSchoolService, UserSchoolDTO } from '../../services/userSchool/userSchoolService';
+import { PageTitle } from '../../components/common/PageTitle/PageTitle';
 import styles from './Admin.module.css';
 import SchoolListModal from '../../components/SchoolListModal';
 import SchoolForm from '../../components/SchoolForm';
@@ -161,7 +162,7 @@ export const Admin = () => {
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>Painel Administrativo</h2>
+      <PageTitle title="Painel Administrativo" />
       
       <div className={styles.adminInfo}>
         <p><strong>Nome:</strong> {user.nome}</p>

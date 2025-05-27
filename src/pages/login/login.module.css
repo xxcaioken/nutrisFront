@@ -28,38 +28,6 @@
   background: linear-gradient(90deg, #1a73e8, #34a853);
 }
 
-.title {
-  color: #1a73e8;
-  font-size: 2rem;
-  font-weight: 600;
-  margin-bottom: 2rem;
-  text-align: center;
-  position: relative;
-}
-
-.title::after {
-  content: '';
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 3px;
-  background: linear-gradient(90deg, #1a73e8, #34a853);
-  border-radius: 3px;
-}
-
-.registerLink {
-  margin-top: 1rem;
-  text-align: center;
-  font-size: 0.9rem;
-}
-
-.link {
-  color: #007bff;
-  text-decoration: none;
-}
-
 .divider {
   display: flex;
   align-items: center;

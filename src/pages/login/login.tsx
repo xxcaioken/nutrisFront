@@ -6,9 +6,9 @@ import { login as loginService, loginByGoogle } from '../../services/auth/AuthSe
 import { Input } from '../../components/common/Input';
 import { Button } from '../../components/common/Button';
 import { GoogleButton } from '../../components/common/GoogleButton';
+import { PageTitle } from '../../components/common/PageTitle/PageTitle';
 import styles from './login.module.css';
 import { message } from 'antd';
-import { HeartOutlined } from '@ant-design/icons';
 
 export const Login = () => {
   const [email, setEmail] = useState('');
@@ -63,14 +63,8 @@ export const Login = () => {
   return (
     <div className={styles.container}>
       <form onSubmit={handleSubmit} className={styles.form}>
-        <div className={styles.logoContainer}>
-          <HeartOutlined className={styles.logo} />
-          <h1 className={styles.appName}>NutriS</h1>
-        </div>
+        <PageTitle title="Login" heartPosition="left" />
         
-        <h2 className={styles.title}>Bem-vindo(a)</h2>
-        <p className={styles.subtitle}>Faça login para acessar sua conta</p>
-
         <Input
           label="Email"
           type="email"

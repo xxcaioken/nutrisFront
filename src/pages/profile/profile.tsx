@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { getUserProfile, UserProfile, getUserSchools, UserSchool } from '../../services/profile/profileService';
 import { Modal } from '../../components/common/Modal';
 import { SpreadsheetModal } from '../../components/SpreadsheetModal/SpreadsheetModal';
+import { PageTitle } from '../../components/common/PageTitle/PageTitle';
 import styles from './profile.module.css';
 
 export const Profile = () => {
@@ -55,7 +56,7 @@ export const Profile = () => {
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>Perfil</h2>
+      <PageTitle title="Perfil" />
       
       <div className={styles.profileInfo}>
         <p><strong>Nome:</strong> {user.nome}</p>
