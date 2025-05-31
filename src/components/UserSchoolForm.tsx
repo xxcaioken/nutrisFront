@@ -17,6 +17,7 @@ const UserSchoolForm = ({ isOpen, onClose, onSubmit, initialValues }: UserSchool
   const [form] = Form.useForm();
   const [users, setUsers] = useState<UserDTO[]>([]);
   const [schools, setSchools] = useState<EscolaDTO[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const isEditing = !!initialValues;
 
   useEffect(() => {
@@ -58,10 +59,13 @@ const UserSchoolForm = ({ isOpen, onClose, onSubmit, initialValues }: UserSchool
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
+      setIsSubmitting(true);
       await onSubmit(values);
       form.resetFields();
     } catch (error) {
-      message.error('Por favor, preencha todos os campos obrigatórios');
+      console.error("Erro no handleSubmit do UserSchoolForm:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -75,6 +79,7 @@ const UserSchoolForm = ({ isOpen, onClose, onSubmit, initialValues }: UserSchool
       cancelText="Cancelar"
       style={{ zIndex: 1001 }}
       maskStyle={{ zIndex: 1000 }}
+      confirmLoading={isSubmitting}
     >
       <Form
         form={form}
@@ -88,6 +93,7 @@ const UserSchoolForm = ({ isOpen, onClose, onSubmit, initialValues }: UserSchool
           <Select
             placeholder="Selecione um usuário"
             showSearch
+            allowClear
             optionFilterProp="children"
             filterOption={(input, option) =>
               (option?.label?.toString() ?? '').toLowerCase().includes(input.toLowerCase())
@@ -109,6 +115,7 @@ const UserSchoolForm = ({ isOpen, onClose, onSubmit, initialValues }: UserSchool
           <Select
             placeholder="Selecione uma escola"
             showSearch
+            allowClear
             optionFilterProp="children"
             filterOption={(input, option) =>
               (option?.label?.toString() ?? '').toLowerCase().includes(input.toLowerCase())
@@ -127,7 +134,7 @@ const UserSchoolForm = ({ isOpen, onClose, onSubmit, initialValues }: UserSchool
           label="Link da Planilha"
           rules={[{ required: true, message: 'Por favor, insira o link da planilha' }]}
         >
-          <Input />
+          <Input allowClear />
         </Form.Item>
       </Form>
     </Modal>

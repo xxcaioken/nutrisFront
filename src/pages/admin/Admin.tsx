@@ -12,7 +12,17 @@ import UserForm from '../../components/UserForm';
 import UserSchoolListModal from '../../components/UserSchoolListModal';
 import UserSchoolForm from '../../components/UserSchoolForm';
 import { message, Modal } from 'antd';
-import { QuestionCircleOutlined } from '@ant-design/icons';
+import { 
+  QuestionCircleOutlined,
+  PlusOutlined,
+  UnorderedListOutlined,
+  UserAddOutlined,
+  TeamOutlined,
+  LinkOutlined,
+  CopyOutlined,
+  EditOutlined,
+  AppstoreOutlined
+} from '@ant-design/icons';
 
 export const Admin = () => {
   const [user, setUser] = useState<UserProfile | null>(null);
@@ -180,13 +190,13 @@ export const Admin = () => {
               setIsSchoolFormOpen(true);
             }}
           >
-            Adicionar Nova Escola
+            <PlusOutlined /> Adicionar Nova Escola
           </button>
           <button 
             className={styles.actionButton}
             onClick={() => setIsSchoolListOpen(true)}
           >
-            Listar Escolas
+            <AppstoreOutlined /> Listar Escolas
           </button>
         </div>
       </div>
@@ -201,13 +211,13 @@ export const Admin = () => {
               setIsUserFormOpen(true);
             }}
           >
-            Criar Usuário
+            <UserAddOutlined /> Criar Usuário
           </button>
           <button 
             className={styles.actionButton}
             onClick={() => setIsUserListOpen(true)}
           >
-            Listar Usuários
+            <TeamOutlined /> Listar Usuários
           </button>
         </div>
       </div>
@@ -222,13 +232,13 @@ export const Admin = () => {
               setIsUserSchoolFormOpen(true);
             }}
           >
-            Criar Vínculo
+            <LinkOutlined /> Criar Vínculo
           </button>
           <button 
             className={styles.actionButton}
             onClick={() => setIsUserSchoolListOpen(true)}
           >
-            Listar Vínculos
+            <UnorderedListOutlined /> Listar Vínculos
           </button>
         </div>
       </div>
@@ -245,7 +255,7 @@ export const Admin = () => {
             rel="noopener noreferrer"
             className={styles.actionButton}
           >
-            Clonar Planilha
+            <CopyOutlined /> Clonar Planilha
             <QuestionCircleOutlined 
               className={styles.helpIcon}
               onClick={(e) => {
@@ -258,7 +268,7 @@ export const Admin = () => {
             className={styles.actionButton}
             onClick={() => setIsSpreadsheetModalOpen(true)}
           >
-            Editar Planilha Base
+            <EditOutlined /> Editar Planilha Base
           </button>
         </div>
       </div>

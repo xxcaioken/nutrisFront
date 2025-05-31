@@ -1,6 +1,7 @@
-import { Form, Input, Modal, Switch, message, Button } from 'antd';
+import { Form, Input, Modal, Switch, message, Button, Select } from 'antd';
 import { UserDTO, userService } from '../services/user/userService';
 import { useState, useEffect } from 'react';
+import { schoolService, EscolaDTO } from '../services/school/schoolService';
 
 interface UserFormProps {
   isOpen: boolean;
@@ -13,18 +14,32 @@ const UserForm = ({ isOpen, onClose, onSubmit, initialValues }: UserFormProps) =
   const [form] = Form.useForm();
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [passwordForm] = Form.useForm();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [schools, setSchools] = useState<EscolaDTO[]>([]);
   const isEditing = !!initialValues;
 
   useEffect(() => {
-    if (isOpen && initialValues) {
-      form.setFieldsValue({
-        nome: initialValues.nome,
-        email: initialValues.email,
-        escolaId: initialValues.escolaId,
-        isAdmin: initialValues.isAdmin
-      });
-    } else {
-      form.resetFields();
+    const fetchSchools = async () => {
+      try {
+        const schoolsData = await schoolService.getAll();
+        setSchools(schoolsData);
+      } catch (error) {
+        message.error('Erro ao carregar lista de escolas');
+      }
+    };
+
+    if (isOpen) {
+      fetchSchools();
+      if (initialValues) {
+        form.setFieldsValue({
+          nome: initialValues.nome,
+          email: initialValues.email,
+          escolaId: initialValues.escolaId,
+          isAdmin: initialValues.isAdmin
+        });
+      } else {
+        form.resetFields();
+      }
     }
   }, [isOpen, initialValues, form]);
 
@@ -36,10 +51,13 @@ const UserForm = ({ isOpen, onClose, onSubmit, initialValues }: UserFormProps) =
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
+      setIsSubmitting(true);
       await onSubmit(values);
       form.resetFields();
     } catch (error) {
-      message.error('Por favor, preencha todos os campos obrigatórios');
+      console.error("Erro no handleSubmit do UserForm:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -66,6 +84,7 @@ const UserForm = ({ isOpen, onClose, onSubmit, initialValues }: UserFormProps) =
         onOk={handleSubmit}
         okText={isEditing ? 'Salvar' : 'Criar'}
         cancelText="Cancelar"
+        confirmLoading={isSubmitting}
       >
         <Form
           form={form}
@@ -76,7 +95,7 @@ const UserForm = ({ isOpen, onClose, onSubmit, initialValues }: UserFormProps) =
             label="Nome"
             rules={[{ required: true, message: 'Por favor, insira o nome' }]}
           >
-            <Input />
+            <Input allowClear />
           </Form.Item>
 
           <Form.Item
@@ -87,7 +106,7 @@ const UserForm = ({ isOpen, onClose, onSubmit, initialValues }: UserFormProps) =
               { type: 'email', message: 'Por favor, insira um email válido' }
             ]}
           >
-            <Input />
+            <Input allowClear />
           </Form.Item>
 
           {!isEditing && (
@@ -96,15 +115,30 @@ const UserForm = ({ isOpen, onClose, onSubmit, initialValues }: UserFormProps) =
               label="Senha"
               rules={[{ required: true, message: 'Por favor, insira a senha' }]}
             >
-              <Input.Password />
+              <Input.Password allowClear />
             </Form.Item>
           )}
 
           <Form.Item
             name="escolaId"
-            label="ID da Escola"
+            label="Escola"
           >
-            <Input />
+            <Select
+              placeholder="Selecione uma escola"
+              allowClear
+              showSearch
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.label?.toString() ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+              loading={schools.length === 0 && isOpen}
+            >
+              {schools.map(school => (
+                <Select.Option key={school.id} value={school.id} label={school.nome}>
+                  {school.nome}
+                </Select.Option>
+              ))}
+            </Select>
           </Form.Item>
 
           <Form.Item

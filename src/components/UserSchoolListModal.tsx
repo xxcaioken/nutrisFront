@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Modal, Table, Button, message, Popconfirm } from 'antd';
+import { Modal, Table, Button, message, Popconfirm, Space } from 'antd';
 import { userSchoolService, UserSchoolDTO } from '../services/userSchool/userSchoolService';
 import styles from './UserSchoolListModal.module.css';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
 interface UserSchoolListModalProps {
   isOpen: boolean;
@@ -83,8 +84,12 @@ const UserSchoolListModal = ({ isOpen, onClose, onEdit }: UserSchoolListModalPro
       title: 'Ações',
       key: 'acoes',
       render: (_: any, record: UserSchoolDTO) => (
-        <div className={styles.actions}>
-          <Button type="link" onClick={() => onEdit(record)}>
+        <Space>
+          <Button 
+            type="primary"
+            icon={<EditOutlined />}
+            onClick={() => onEdit(record)}
+          >
             Editar
           </Button>
           <Popconfirm
@@ -93,11 +98,14 @@ const UserSchoolListModal = ({ isOpen, onClose, onEdit }: UserSchoolListModalPro
             okText="Sim"
             cancelText="Não"
           >
-            <Button type="link" danger>
+            <Button 
+              danger
+              icon={<DeleteOutlined />}
+            >
               Excluir
             </Button>
           </Popconfirm>
-        </div>
+        </Space>
       ),
     },
   ];

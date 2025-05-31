@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Modal, Table, Button, message, Popconfirm } from 'antd';
+import { Modal, Table, Button, message, Popconfirm, Space } from 'antd';
 import { userService, UserDTO } from '../services/user/userService';
 import styles from './UserListModal.module.css';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
 interface UserListModalProps {
   isOpen: boolean;
@@ -84,8 +85,12 @@ const UserListModal = ({ isOpen, onClose, onEdit }: UserListModalProps) => {
       title: 'Ações',
       key: 'acoes',
       render: (_: any, record: UserDTO) => (
-        <div className={styles.actions}>
-          <Button type="link" onClick={() => onEdit(record)}>
+        <Space>
+          <Button 
+            type="primary"
+            icon={<EditOutlined />}
+            onClick={() => onEdit(record)}
+          >
             Editar
           </Button>
           <Popconfirm
@@ -94,11 +99,14 @@ const UserListModal = ({ isOpen, onClose, onEdit }: UserListModalProps) => {
             okText="Sim"
             cancelText="Não"
           >
-            <Button type="link" danger>
+            <Button 
+              danger
+              icon={<DeleteOutlined />}
+            >
               Excluir
             </Button>
           </Popconfirm>
-        </div>
+        </Space>
       ),
     },
   ];
