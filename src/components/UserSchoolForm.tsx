@@ -1,5 +1,5 @@
 import { Form, Input, Modal, message, Select } from 'antd';
-import { UserSchoolDTO, userSchoolService } from '../services/userSchool/userSchoolService';
+import { UserSchoolDTO } from '../services/userSchool/userSchoolService';
 import { useEffect, useState } from 'react';
 import { UserDTO } from '../services/user/userService';
 import { EscolaDTO } from '../services/school/schoolService';

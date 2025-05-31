@@ -206,7 +206,6 @@
   animation-fill-mode: both;
 }
 
-/* Estilização do Modal */
 :global(.ant-modal-content) {
   border-radius: 16px;
   overflow: hidden;
@@ -228,4 +227,51 @@
 
 :global(.ant-modal-body) {
   padding: 1.5rem;
-} 
+}
+
+.spreadsheetLink:hover {
+  color: #1557b0;
+}
+
+.mainSpreadsheetLink {
+  font-weight: 500;
+}
+
+.dependentLinksContainer {
+  margin-block: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(26, 115, 232, 0.1);
+}
+
+.dependentLinksHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.7rem;
+}
+
+.auxLinksList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.auxLinksList .spreadsheetLink {
+  font-size: 0.9rem;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid rgba(26, 115, 232, 0.3);
+  border-radius: 6px;
+  background-color: rgba(26, 115, 232, 0.05);
+  text-decoration: none;
+}
+
+.auxLinksList .spreadsheetLink:hover {
+  background-color: rgba(26, 115, 232, 0.15);
+  border-color: rgba(26, 115, 232, 0.5);
+}
+
+.updateDate {
+ margin-top: 0.75rem;
+ font-size: 0.85rem;
+ color: #777;
+}

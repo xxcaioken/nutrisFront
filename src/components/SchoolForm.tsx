@@ -5,7 +5,7 @@ import { EscolaDTO } from '../services/school/schoolService';
 interface SchoolFormProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (values: Omit<EscolaDTO, 'id' | 'dataCriacao'>) => void;
+  onSubmit: (values: Omit<EscolaDTO, 'id' | 'dataCriacao'>) => Promise<void>;
   initialValues?: EscolaDTO;
 }
 
@@ -22,10 +22,10 @@ const SchoolForm: React.FC<SchoolFormProps> = ({
     try {
       const values = await form.validateFields();
       setIsSubmitting(true);
-      onSubmit(values);
+      await onSubmit(values);
       form.resetFields();
     } catch (error) {
-      console.error("Erro no handleSubmit do SchoolForm:", error);
+      message.error('Erro ao validar formulário:' + error);
     } finally {
       setIsSubmitting(false);
     }
