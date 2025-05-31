@@ -214,7 +214,7 @@ export const Profile = () => {
           onClose={handleCloseImportShortcutsModal}
           userSchoolId={selectedUserSchoolForImports.id}
           userSchoolName={selectedUserSchoolForImports.escola?.nome}
-          linkTabelaPrincipal={selectedUserSchoolForImports.linkPlanilha}
+          planilhaOrigemUrl={selectedUserSchoolForImports.linkPlanilha}
           linksAdicionais={selectedUserSchoolForImports.dependentLinks}
         />
       )}

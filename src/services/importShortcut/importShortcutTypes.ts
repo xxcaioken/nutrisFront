@@ -1,31 +1,32 @@
-export interface ImportShortcutDto {
+export interface ImportacaoManagerDto {
   id: number;
   usuarioEscolaId: number;
   nome: string;
-  linkTabelaPrincipal: string;
-  linkTabelaDestino: string;
-  celulaOrigem: string;
-  celulaDestino: string;
+  planilhaOrigemUrl: string;
+  planilhaDestinoUrl: string;
+  celulasMapping: string;
   descricao?: string | null;
+  isAtivo: boolean;
   dataCriacao: string;
   dataAtualizacao?: string | null;
+  ultimaExecucao?: string | null;
 }
 
-export interface CreateImportShortcutDto {
+export interface CreateImportacaoManagerDto {
   usuarioEscolaId: number;
   nome: string;
-  linkTabelaPrincipal: string;
-  linkTabelaDestino: string;
-  celulaOrigem: string;
-  celulaDestino: string;
+  planilhaOrigemUrl: string;
+  planilhaDestinoUrl: string;
+  celulasMapping: string;
   descricao?: string | null;
+  isAtivo?: boolean;
 }
 
-export interface UpdateImportShortcutDto {
-  nome: string;
-  linkTabelaPrincipal: string;
-  linkTabelaDestino: string;
-  celulaOrigem: string;
-  celulaDestino: string;
+export interface UpdateImportacaoManagerDto {
+  nome?: string | null;
+  planilhaOrigemUrl?: string | null;
+  planilhaDestinoUrl?: string | null;
+  celulasMapping?: string | null;
   descricao?: string | null;
+  isAtivo?: boolean | null;
 } 

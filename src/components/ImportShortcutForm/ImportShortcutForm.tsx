@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Form, Input, message, Select } from 'antd';
-import { ImportShortcutDto, CreateImportShortcutDto, UpdateImportShortcutDto } from '../../services/importShortcut/importShortcutTypes';
+import { Modal, Form, Input, message, Select, Switch } from 'antd';
+import { ImportacaoManagerDto, CreateImportacaoManagerDto, UpdateImportacaoManagerDto } from '../../services/importShortcut/importShortcutTypes';
 import { LinkDto } from '../../services/link/linkTypes';
 
 interface ImportShortcutFormProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (values: CreateImportShortcutDto | UpdateImportShortcutDto) => Promise<void>;
-  initialValues?: ImportShortcutDto;
+  onSubmit: (values: CreateImportacaoManagerDto | UpdateImportacaoManagerDto) => Promise<void>;
+  initialValues?: ImportacaoManagerDto;
   usuarioEscolaId?: number;
-  linkTabelaPrincipal?: string;
+  planilhaOrigemUrl?: string;
   linksAdicionais?: LinkDto[];
 }
 
@@ -19,7 +19,7 @@ const ImportShortcutForm: React.FC<ImportShortcutFormProps> = ({
   onSubmit,
   initialValues,
   usuarioEscolaId,
-  linkTabelaPrincipal,
+  planilhaOrigemUrl,
   linksAdicionais
 }) => {
   const [form] = Form.useForm();
@@ -32,22 +32,24 @@ const ImportShortcutForm: React.FC<ImportShortcutFormProps> = ({
         form.setFieldsValue(initialValues);
       } else {
         form.resetFields();
-        // Define o link da tabela principal automaticamente se disponível
-        if (linkTabelaPrincipal) {
-          form.setFieldValue('linkTabelaPrincipal', linkTabelaPrincipal);
+        // Define o link da planilha origem automaticamente se disponível
+        if (planilhaOrigemUrl) {
+          form.setFieldValue('planilhaOrigemUrl', planilhaOrigemUrl);
         }
+        // Define como ativo por padrão
+        form.setFieldValue('isAtivo', true);
       }
     }
-  }, [isOpen, initialValues, linkTabelaPrincipal, form]);
+  }, [isOpen, initialValues, planilhaOrigemUrl, form]);
 
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
       setIsSubmitting(true);
       if (isEditing && initialValues) {
-        await onSubmit({ ...values } as UpdateImportShortcutDto);
+        await onSubmit({ ...values } as UpdateImportacaoManagerDto);
       } else if (usuarioEscolaId) {
-        await onSubmit({ ...values, usuarioEscolaId } as CreateImportShortcutDto);
+        await onSubmit({ ...values, usuarioEscolaId } as CreateImportacaoManagerDto);
       }
       form.resetFields();
     } catch (error) {
@@ -64,7 +66,7 @@ const ImportShortcutForm: React.FC<ImportShortcutFormProps> = ({
 
   return (
     <Modal
-      title={isEditing ? 'Editar Atalho de Importação' : 'Adicionar Novo Atalho de Importação'}
+      title={isEditing ? 'Editar Importação' : 'Adicionar Nova Importação'}
       open={isOpen}
       onCancel={handleClose}
       onOk={handleSubmit}
@@ -72,22 +74,22 @@ const ImportShortcutForm: React.FC<ImportShortcutFormProps> = ({
       cancelText="Cancelar"
       confirmLoading={isSubmitting}
       destroyOnClose
-      width={600}
+      width={700}
     >
       <Form form={form} layout="vertical" initialValues={initialValues}>
         <Form.Item
           name="nome"
-          label="Nome do Atalho"
-          rules={[{ required: true, message: 'Por favor, insira o nome do atalho' }]}
+          label="Nome da Importação"
+          rules={[{ required: true, message: 'Por favor, insira o nome da importação' }]}
         >
           <Input placeholder="Ex: Importar Notas para Planilha Final" allowClear />
         </Form.Item>
 
         <Form.Item
-          name="linkTabelaPrincipal"
-          label="Link da Tabela Principal (Origem)"
+          name="planilhaOrigemUrl"
+          label="Planilha de Origem"
           rules={[
-            { required: true, message: 'Por favor, insira o link da tabela principal' },
+            { required: true, message: 'Por favor, insira o link da planilha de origem' },
             { type: 'url', message: 'Por favor, insira uma URL válida' },
           ]}
         >
@@ -101,10 +103,11 @@ const ImportShortcutForm: React.FC<ImportShortcutFormProps> = ({
         </Form.Item>
 
         <Form.Item
-          name="linkTabelaDestino"
-          label="Link da Tabela de Destino"
+          name="planilhaDestinoUrl"
+          label="Planilha de Destino"
           rules={[
-            { required: true, message: 'Por favor, selecione a tabela de destino' },
+            { required: true, message: 'Por favor, selecione a planilha de destino' },
+            { type: 'url', message: 'Por favor, insira uma URL válida' },
           ]}
         >
           <Select
@@ -115,37 +118,41 @@ const ImportShortcutForm: React.FC<ImportShortcutFormProps> = ({
           >
             {linksAdicionais?.map(link => (
               <Select.Option key={link.id} value={link.url}>
-                {link.nome} - {link.url}
+                {link.nome}
               </Select.Option>
             ))}
           </Select>
         </Form.Item>
 
-        <div style={{ display: 'flex', gap: '16px' }}>
-          <Form.Item
-            name="celulaOrigem"
-            label="Célula de Origem"
-            rules={[{ required: true, message: 'Por favor, insira a célula de origem' }]}
-            style={{ flex: 1 }}
-          >
-            <Input placeholder="Ex: A1, B5, C10" allowClear />
-          </Form.Item>
-
-          <Form.Item
-            name="celulaDestino"
-            label="Célula de Destino"
-            rules={[{ required: true, message: 'Por favor, insira a célula de destino' }]}
-            style={{ flex: 1 }}
-          >
-            <Input placeholder="Ex: A1, B5, C10" allowClear />
-          </Form.Item>
-        </div>
+        <Form.Item
+          name="celulasMapping"
+          label="Mapeamento de Células"
+          rules={[{ required: true, message: 'Por favor, insira o mapeamento de células' }]}
+          extra="Exemplo: A1->B1,A2->B2,C3->D3 (formato origem->destino separado por vírgula)"
+        >
+          <Input.TextArea 
+            placeholder="Ex: A1->B1, A2->B2, C10->D10"
+            allowClear 
+            rows={3}
+          />
+        </Form.Item>
 
         <Form.Item name="descricao" label="Descrição (Opcional)">
           <Input.TextArea 
             placeholder="Detalhes sobre a importação (ex: dados que serão copiados, frequência, etc.)" 
             allowClear 
             rows={3} 
+          />
+        </Form.Item>
+
+        <Form.Item 
+          name="isAtivo" 
+          label="Status" 
+          valuePropName="checked"
+        >
+          <Switch 
+            checkedChildren="Ativo" 
+            unCheckedChildren="Inativo"
           />
         </Form.Item>
       </Form>

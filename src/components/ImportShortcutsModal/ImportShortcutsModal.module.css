@@ -3,10 +3,17 @@
 }
 
 .cellsMapping {
-  display: flex;
-  align-items: center;
-  gap: 8px;
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.9rem;
+  background: rgba(26, 115, 232, 0.1);
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: #1a73e8;
+  font-weight: 500;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .cellOrigin {

@@ -8,16 +8,18 @@ import {
   Popconfirm,
   Tooltip,
   Empty,
+  Tag,
 } from 'antd';
 import {
   EditOutlined,
   DeleteOutlined,
   PlusOutlined,
   QuestionCircleOutlined,
-  SwapOutlined
+  SwapOutlined,
+  PlayCircleOutlined
 } from '@ant-design/icons';
-import { ImportShortcutDto, CreateImportShortcutDto, UpdateImportShortcutDto } from '../../services/importShortcut/importShortcutTypes';
-import { importShortcutService } from '../../services/importShortcut/importShortcutService';
+import { ImportacaoManagerDto, CreateImportacaoManagerDto, UpdateImportacaoManagerDto } from '../../services/importShortcut/importShortcutTypes';
+import { importacaoManagerService } from '../../services/importShortcut/importShortcutService';
 import ImportShortcutForm from '../ImportShortcutForm/ImportShortcutForm';
 import { LinkDto } from '../../services/link/linkTypes';
 import styles from './ImportShortcutsModal.module.css';
@@ -27,7 +29,7 @@ interface ImportShortcutsModalProps {
   onClose: () => void;
   userSchoolId: number | null;
   userSchoolName?: string;
-  linkTabelaPrincipal?: string;
+  planilhaOrigemUrl?: string;
   linksAdicionais?: LinkDto[];
 }
 
@@ -36,23 +38,24 @@ const ImportShortcutsModal: React.FC<ImportShortcutsModalProps> = ({
   onClose,
   userSchoolId,
   userSchoolName,
-  linkTabelaPrincipal,
+  planilhaOrigemUrl,
   linksAdicionais,
 }) => {
-  const [shortcuts, setShortcuts] = useState<ImportShortcutDto[]>([]);
+  const [importacoes, setImportacoes] = useState<ImportacaoManagerDto[]>([]);
   const [loading, setLoading] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [selectedShortcut, setSelectedShortcut] = useState<ImportShortcutDto | undefined>(undefined);
+  const [selectedImportacao, setSelectedImportacao] = useState<ImportacaoManagerDto | undefined>(undefined);
+  const [executingId, setExecutingId] = useState<number | null>(null);
 
-  const loadShortcuts = useCallback(async () => {
+  const loadImportacoes = useCallback(async () => {
     if (!userSchoolId) return;
     setLoading(true);
     try {
-      const data = await importShortcutService.getByUsuarioEscolaId(userSchoolId);
-      setShortcuts(data);
+      const data = await importacaoManagerService.getByUsuarioEscolaId(userSchoolId);
+      setImportacoes(data);
     } catch (error) {
-      message.error('Erro ao carregar atalhos de importação.');
-      console.error('Erro ao carregar atalhos:', error);
+      message.error('Erro ao carregar importações.');
+      console.error('Erro ao carregar importações:', error);
     } finally {
       setLoading(false);
     }
@@ -60,52 +63,77 @@ const ImportShortcutsModal: React.FC<ImportShortcutsModalProps> = ({
 
   useEffect(() => {
     if (isOpen && userSchoolId) {
-      loadShortcuts();
+      loadImportacoes();
     }
-  }, [isOpen, userSchoolId, loadShortcuts]);
+  }, [isOpen, userSchoolId, loadImportacoes]);
 
   const handleAdd = () => {
-    setSelectedShortcut(undefined);
+    setSelectedImportacao(undefined);
     setIsFormOpen(true);
   };
 
-  const handleEdit = (shortcut: ImportShortcutDto) => {
-    setSelectedShortcut(shortcut);
+  const handleEdit = (importacao: ImportacaoManagerDto) => {
+    setSelectedImportacao(importacao);
     setIsFormOpen(true);
   };
 
   const handleDelete = async (id: number) => {
     try {
-      await importShortcutService.delete(id);
-      message.success('Atalho de importação excluído com sucesso!');
-      loadShortcuts();
+      await importacaoManagerService.delete(id);
+      message.success('Importação excluída com sucesso!');
+      loadImportacoes();
     } catch (error) {
-      message.error('Erro ao excluir atalho de importação.');
-      console.error('Erro ao excluir atalho:', error);
+      message.error('Erro ao excluir importação.');
+      console.error('Erro ao excluir importação:', error);
     }
   };
 
-  const handleFormSubmit = async (values: CreateImportShortcutDto | UpdateImportShortcutDto) => {
+  const handleExecutar = async (id: number) => {
+    setExecutingId(id);
+    try {
+      await importacaoManagerService.executarImportacao(id);
+      message.success('Importação executada com sucesso!');
+      loadImportacoes(); // Recarrega para atualizar a última execução
+    } catch (error) {
+      message.error('Erro ao executar importação.');
+      console.error('Erro ao executar importação:', error);
+    } finally {
+      setExecutingId(null);
+    }
+  };
+
+  const handleFormSubmit = async (values: CreateImportacaoManagerDto | UpdateImportacaoManagerDto) => {
     if (!userSchoolId) return;
     try {
-      if (selectedShortcut) {
-        await importShortcutService.update(selectedShortcut.id, values as UpdateImportShortcutDto);
-        message.success('Atalho de importação atualizado com sucesso!');
+      if (selectedImportacao) {
+        await importacaoManagerService.update(selectedImportacao.id, values as UpdateImportacaoManagerDto);
+        message.success('Importação atualizada com sucesso!');
       } else {
-        await importShortcutService.create(values as CreateImportShortcutDto);
-        message.success('Atalho de importação adicionado com sucesso!');
+        await importacaoManagerService.create(values as CreateImportacaoManagerDto);
+        message.success('Importação adicionada com sucesso!');
       }
       setIsFormOpen(false);
-      loadShortcuts();
+      loadImportacoes();
     } catch (error) {
-      message.error('Erro ao salvar atalho de importação.');
-      console.error('Erro ao salvar atalho:', error);
+      message.error('Erro ao salvar importação.');
+      console.error('Erro ao salvar importação:', error);
     }
   };
 
   const getLinkNameByUrl = (url: string) => {
     const link = linksAdicionais?.find(l => l.url === url);
     return link ? link.nome : url;
+  };
+
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return '-';
+    return new Date(dateString).toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   };
 
   const columns = [
@@ -116,22 +144,22 @@ const ImportShortcutsModal: React.FC<ImportShortcutsModalProps> = ({
       ellipsis: true,
     },
     {
-      title: 'Tabela Principal',
-      dataIndex: 'linkTabelaPrincipal',
-      key: 'linkTabelaPrincipal',
+      title: 'Planilha Origem',
+      dataIndex: 'planilhaOrigemUrl',
+      key: 'planilhaOrigemUrl',
       ellipsis: true,
       render: (url: string) => (
         <Tooltip title={url}>
           <a href={url} target="_blank" rel="noopener noreferrer">
-            Tabela Principal
+            Planilha Principal
           </a>
         </Tooltip>
       ),
     },
     {
-      title: 'Tabela Destino',
-      dataIndex: 'linkTabelaDestino',
-      key: 'linkTabelaDestino',
+      title: 'Planilha Destino',
+      dataIndex: 'planilhaDestinoUrl',
+      key: 'planilhaDestinoUrl',
       ellipsis: true,
       render: (url: string) => (
         <Tooltip title={url}>
@@ -142,39 +170,58 @@ const ImportShortcutsModal: React.FC<ImportShortcutsModalProps> = ({
       ),
     },
     {
-      title: 'Células',
-      key: 'celulas',
-      render: (_: any, record: ImportShortcutDto) => (
-        <div className={styles.cellsMapping}>
-          <span className={styles.cellOrigin}>{record.celulaOrigem}</span>
-          <SwapOutlined className={styles.arrowIcon} />
-          <span className={styles.cellDestination}>{record.celulaDestino}</span>
-        </div>
+      title: 'Mapeamento',
+      dataIndex: 'celulasMapping',
+      key: 'celulasMapping',
+      ellipsis: true,
+      render: (mapping: string) => (
+        <Tooltip title={mapping}>
+          <span className={styles.cellsMapping}>{mapping}</span>
+        </Tooltip>
       ),
     },
     {
-      title: 'Descrição',
-      dataIndex: 'descricao',
-      key: 'descricao',
-      ellipsis: true,
-      render: (text: string) => text || '-',
+      title: 'Status',
+      dataIndex: 'isAtivo',
+      key: 'isAtivo',
+      render: (isAtivo: boolean) => (
+        <Tag color={isAtivo ? 'green' : 'red'}>
+          {isAtivo ? 'Ativo' : 'Inativo'}
+        </Tag>
+      ),
+    },
+    {
+      title: 'Última Execução',
+      dataIndex: 'ultimaExecucao',
+      key: 'ultimaExecucao',
+      render: (date: string) => formatDate(date),
     },
     {
       title: 'Ações',
       key: 'actions',
-      width: 120,
-      render: (_: any, record: ImportShortcutDto) => (
+      width: 180,
+      render: (_: any, record: ImportacaoManagerDto) => (
         <Space>
-          <Tooltip title="Editar Atalho">
+          <Tooltip title="Executar Importação">
+            <Button
+              type="primary"
+              icon={<PlayCircleOutlined />}
+              onClick={() => handleExecutar(record.id)}
+              loading={executingId === record.id}
+              disabled={!record.isAtivo}
+              style={{ backgroundColor: '#52c41a', borderColor: '#52c41a' }}
+            />
+          </Tooltip>
+          <Tooltip title="Editar Importação">
             <Button
               type="primary"
               icon={<EditOutlined />}
               onClick={() => handleEdit(record)}
             />
           </Tooltip>
-          <Tooltip title="Excluir Atalho">
+          <Tooltip title="Excluir Importação">
             <Popconfirm
-              title="Tem certeza que deseja excluir este atalho de importação?"
+              title="Tem certeza que deseja excluir esta importação?"
               onConfirm={() => handleDelete(record.id)}
               okText="Sim"
               cancelText="Não"
@@ -191,10 +238,10 @@ const ImportShortcutsModal: React.FC<ImportShortcutsModalProps> = ({
   return (
     <>
       <Modal
-        title={`Atalhos de Importação: ${userSchoolName || 'Carregando...'}`}
+        title={`Importações: ${userSchoolName || 'Carregando...'}`}
         open={isOpen}
         onCancel={onClose}
-        width="90%"
+        width="95%"
         style={{ top: 20 }}
         footer={[
           <Button key="close" onClick={onClose}>
@@ -208,15 +255,15 @@ const ImportShortcutsModal: React.FC<ImportShortcutsModalProps> = ({
           onClick={handleAdd}
           style={{ marginBottom: 16 }}
         >
-          Adicionar Novo Atalho de Importação
+          Adicionar Nova Importação
         </Button>
         <Table
           columns={columns}
-          dataSource={shortcuts}
+          dataSource={importacoes}
           loading={loading}
           rowKey="id"
-          pagination={{ pageSize: 5, hideOnSinglePage: true }}
-          locale={{ emptyText: <Empty description="Nenhum atalho de importação encontrado para esta rota." /> }}
+          pagination={{ pageSize: 6, hideOnSinglePage: true }}
+          locale={{ emptyText: <Empty description="Nenhuma importação encontrada para esta rota." /> }}
           className={styles.importShortcutsTable}
         />
       </Modal>
@@ -226,9 +273,9 @@ const ImportShortcutsModal: React.FC<ImportShortcutsModalProps> = ({
           isOpen={isFormOpen}
           onClose={() => setIsFormOpen(false)}
           onSubmit={handleFormSubmit}
-          initialValues={selectedShortcut}
+          initialValues={selectedImportacao}
           usuarioEscolaId={userSchoolId}
-          linkTabelaPrincipal={linkTabelaPrincipal}
+          planilhaOrigemUrl={planilhaOrigemUrl}
           linksAdicionais={linksAdicionais}
         />
       )}
