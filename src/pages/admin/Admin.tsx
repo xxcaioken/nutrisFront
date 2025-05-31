@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { getUserProfile, UserProfile } from '../../services/profile/profileService';
 import { schoolService, EscolaDTO } from '../../services/school/schoolService';
 import { userService, UserDTO } from '../../services/user/userService';
@@ -23,6 +23,7 @@ import {
   EditOutlined,
   AppstoreOutlined
 } from '@ant-design/icons';
+import HamburgerMenu from '../../components/common/HamburgerMenu/HamburgerMenu';
 
 export const Admin = () => {
   const [user, setUser] = useState<UserProfile | null>(null);
@@ -171,7 +172,8 @@ export const Admin = () => {
   if (!user.isAdmin) return <div className={styles.error}>Acesso não autorizado</div>;
 
   return (
-    <div className={styles.container}>
+    <div className={styles.adminContainer}>
+      <HamburgerMenu />
       <PageTitle title="Painel Administrativo" />
       
       <div className={styles.adminInfo}>

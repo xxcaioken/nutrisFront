@@ -42,3 +42,16 @@ export const loginByGoogle = async  (data: LoginRequest): Promise<AuthResponse> 
     throw error;
   }
 };
+
+export const logout = async (): Promise<void> => {
+  try {
+    await axiosInstance.post(`${AUTH_URL}/logout`);
+  } catch (error: any) {
+    console.error('Erro ao fazer logout no serviço:', {
+      status: error.response?.status,
+      data: error.response?.data,
+      message: error.message
+    });
+    throw error;
+  }
+};

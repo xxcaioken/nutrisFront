@@ -9,6 +9,7 @@ import { LinkOutlined, FileExcelOutlined } from '@ant-design/icons';
 import DependentLinksModal from '../../components/DependentLinksModal/DependentLinksModal';
 import { LinkDto } from '../../services/link/linkTypes';
 import { linkService } from '../../services/link/linkService';
+import HamburgerMenu from '../../components/common/HamburgerMenu/HamburgerMenu';
 
 interface ProfileUserSchool extends UserSchool {
   dependentLinks?: LinkDto[];
@@ -91,6 +92,7 @@ export const Profile = () => {
 
   return (
     <div className={styles.container}>
+      <HamburgerMenu />
       <PageTitle title="Perfil" />
       
       <div className={styles.profileInfo}>
