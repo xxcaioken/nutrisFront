@@ -1,0 +1,31 @@
+.importShortcutsTable {
+  /* Estilos para a tabela se necessário */
+}
+
+.cellsMapping {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+}
+
+.cellOrigin {
+  background: rgba(26, 115, 232, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #1a73e8;
+  font-weight: 500;
+}
+
+.cellDestination {
+  background: rgba(52, 168, 83, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #34a853;
+  font-weight: 500;
+}
+
+.arrowIcon {
+  color: #666;
+  font-size: 12px;
+} 

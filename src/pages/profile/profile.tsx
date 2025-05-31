@@ -5,8 +5,9 @@ import { SpreadsheetModal } from '../../components/SpreadsheetModal/SpreadsheetM
 import { PageTitle } from '../../components/common/PageTitle/PageTitle';
 import styles from './profile.module.css';
 import { Button, Tooltip, message } from 'antd';
-import { LinkOutlined, FileExcelOutlined } from '@ant-design/icons';
+import { LinkOutlined, FileExcelOutlined, SwapOutlined } from '@ant-design/icons';
 import DependentLinksModal from '../../components/DependentLinksModal/DependentLinksModal';
+import ImportShortcutsModal from '../../components/ImportShortcutsModal/ImportShortcutsModal';
 import { LinkDto } from '../../services/link/linkTypes';
 import { linkService } from '../../services/link/linkService';
 import HamburgerMenu from '../../components/common/HamburgerMenu/HamburgerMenu';
@@ -22,7 +23,9 @@ export const Profile = () => {
   const [error, setError] = useState<string | null>(null);
   const [selectedSpreadsheet, setSelectedSpreadsheet] = useState<string | null>(null);
   const [isDependentLinksModalOpen, setIsDependentLinksModalOpen] = useState(false);
-  const [selectedUserSchoolForLinks, setSelectedUserSchoolForLinks] = useState<UserSchool | null>(null);
+  const [isImportShortcutsModalOpen, setIsImportShortcutsModalOpen] = useState(false);
+  const [selectedUserSchoolForLinks, setSelectedUserSchoolForLinks] = useState<ProfileUserSchool | null>(null);
+  const [selectedUserSchoolForImports, setSelectedUserSchoolForImports] = useState<ProfileUserSchool | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -76,7 +79,7 @@ export const Profile = () => {
     setSelectedSpreadsheet(null);
   };
 
-  const handleOpenDependentLinksModal = (school: UserSchool) => {
+  const handleOpenDependentLinksModal = (school: ProfileUserSchool) => {
     setSelectedUserSchoolForLinks(school);
     setIsDependentLinksModalOpen(true);
   };
@@ -84,6 +87,16 @@ export const Profile = () => {
   const handleCloseDependentLinksModal = () => {
     setSelectedUserSchoolForLinks(null);
     setIsDependentLinksModalOpen(false);
+  };
+
+  const handleOpenImportShortcutsModal = (school: ProfileUserSchool) => {
+    setSelectedUserSchoolForImports(school);
+    setIsImportShortcutsModalOpen(true);
+  };
+
+  const handleCloseImportShortcutsModal = () => {
+    setSelectedUserSchoolForImports(null);
+    setIsImportShortcutsModalOpen(false);
   };
 
   if (loading) return <div className={styles.loading}>Carregando...</div>;
@@ -150,13 +163,25 @@ export const Profile = () => {
                   {school.dataAtualizacao && (
                     <p className={styles.updateDate}><strong>Última atualização da rota:</strong> {formatDate(school.dataAtualizacao)}</p>
                   )}
-                  <Button 
-                    type="dashed"
-                    icon={<LinkOutlined />}
-                    onClick={() => handleOpenDependentLinksModal(school)}
-                  >
-                    Gerenciar Links Dependentes
-                  </Button>
+                  
+                  <div className={styles.managementButtons}>
+                    <Button 
+                      type="dashed"
+                      icon={<LinkOutlined />}
+                      onClick={() => handleOpenDependentLinksModal(school)}
+                      style={{ marginRight: 8 }}
+                    >
+                      Gerenciar Links Dependentes
+                    </Button>
+                    
+                    <Button 
+                      type="dashed"
+                      icon={<SwapOutlined />}
+                      onClick={() => handleOpenImportShortcutsModal(school)}
+                    >
+                      Gerenciar Importações
+                    </Button>
+                  </div>
                 </div>
               </li>
             ))}
@@ -180,6 +205,17 @@ export const Profile = () => {
           onClose={handleCloseDependentLinksModal}
           userSchoolId={selectedUserSchoolForLinks.id}
           userSchoolName={selectedUserSchoolForLinks.escola?.nome}
+        />
+      )}
+
+      {selectedUserSchoolForImports && (
+        <ImportShortcutsModal
+          isOpen={isImportShortcutsModalOpen}
+          onClose={handleCloseImportShortcutsModal}
+          userSchoolId={selectedUserSchoolForImports.id}
+          userSchoolName={selectedUserSchoolForImports.escola?.nome}
+          linkTabelaPrincipal={selectedUserSchoolForImports.linkPlanilha}
+          linksAdicionais={selectedUserSchoolForImports.dependentLinks}
         />
       )}
     </div>

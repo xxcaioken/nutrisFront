@@ -275,3 +275,10 @@
  font-size: 0.85rem;
  color: #777;
 }
+
+.managementButtons {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
